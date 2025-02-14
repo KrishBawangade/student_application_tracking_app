@@ -12,6 +12,7 @@ class StudentDataModel {
   final String phoneNumber;
   final String profileImageUrl;
   final List<String> appliedApplicationList;
+  final String fcmToken;
 
   StudentDataModel({
     required this.id,
@@ -20,6 +21,7 @@ class StudentDataModel {
     this.phoneNumber = "",
     this.profileImageUrl = "",
     required this.appliedApplicationList,
+    this.fcmToken = "",
   });
 
   factory StudentDataModel.fromJson(Map<String, dynamic> json) => _$StudentDataModelFromJson(json);

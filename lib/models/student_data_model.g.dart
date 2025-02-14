@@ -16,6 +16,7 @@ StudentDataModel _$StudentDataModelFromJson(Map<String, dynamic> json) =>
       appliedApplicationList: (json['appliedApplicationList'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      fcmToken: json['fcmToken'] as String? ?? "",
     );
 
 Map<String, dynamic> _$StudentDataModelToJson(StudentDataModel instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$StudentDataModelToJson(StudentDataModel instance) =>
       'phoneNumber': instance.phoneNumber,
       'profileImageUrl': instance.profileImageUrl,
       'appliedApplicationList': instance.appliedApplicationList,
+      'fcmToken': instance.fcmToken,
     };
