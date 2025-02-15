@@ -1,4 +1,3 @@
-
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
 
@@ -6,30 +5,30 @@ part 'university_data_model.g.dart';
 
 @JsonSerializable()
 class UniversityDataModel {
-   final String id; // Unique ID for the university (from Firestore or other database)
-  final String name;
-  final String location; // Could be a more complex object for detailed location info
-  final String website;
-  final String logoUrl; // URL to the university's logo
-  final List<String> programsOffered; // List of programs/majors offered
-  final String description; // A brief description of the university
-  final int applicationDeadlineMillis; 
-  final int appliedStudents;
+  final String id;
+  final String? name; // Made nullable
+  final String? location;
+  final String? website; // Made nullable
+  final String? imageUrl; // Made nullable
+  final List<String>? programs; // Made nullable
+  final String? description; // Made nullable
+  final int? applicationDeadlineMillis; // Made nullable
+  final int? appliedStudents; // Made nullable
 
   UniversityDataModel({
     required this.id,
-    required this.name,
-    required this.location,
-    required this.website,
-    required this.logoUrl,
-    required this.programsOffered,
-    required this.description,
-    required this.applicationDeadlineMillis,
-    required this.appliedStudents,
+    this.name,
+    this.location,
+    this.website,
+    this.imageUrl,
+    this.programs,
+    this.description,
+    this.applicationDeadlineMillis,
+    this.appliedStudents,
   });
 
-  factory UniversityDataModel.fromJson(Map<String, dynamic> json) => _$UniversityDataModelFromJson(json);
+  factory UniversityDataModel.fromJson(Map<String, dynamic> json) =>
+      _$UniversityDataModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UniversityDataModelToJson(this);
-
 }

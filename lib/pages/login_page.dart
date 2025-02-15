@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:student_application_tracking_app/pages/dashboard_page.dart';
 import 'package:student_application_tracking_app/providers/user_auth_provider.dart';
 import 'package:student_application_tracking_app/services/firebase/firebase_messaging_class.dart';
 import 'package:student_application_tracking_app/utils/constants.dart';
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _isLoading = false;
             });
-            // Navigate to the next screen
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => DashboardPage()));
           },
           onError: (error) {
             setState(() {

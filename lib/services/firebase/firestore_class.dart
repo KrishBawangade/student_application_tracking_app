@@ -22,7 +22,7 @@ class FirestoreClass {
       required Function(String) onError}) {
     try {
       return _db
-          .collection(AppConstants.studentCollection)
+          .collection(AppConstants.applicationCollection)
           .where(AppConstants.studentIdField, isEqualTo: studentId)
           .snapshots();
     } catch (e) {
@@ -34,7 +34,7 @@ class FirestoreClass {
   Stream<QuerySnapshot<Map<String, dynamic>>> getUniversityList({required Function(String) onError}) {
     try {
       return _db
-          .collection(AppConstants.studentCollection)
+          .collection(AppConstants.universityCollection)
           .snapshots();
     } catch (e) {
       onError(e.toString());
