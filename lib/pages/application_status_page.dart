@@ -8,6 +8,7 @@ import 'package:student_application_tracking_app/models/university_data_model.da
 import 'package:student_application_tracking_app/providers/university_provider.dart';
 import 'package:student_application_tracking_app/utils/constants.dart';
 import 'package:student_application_tracking_app/utils/enums.dart';
+import 'package:student_application_tracking_app/widgets/main_app_drawer.dart';
 
 class ApplicationStatusPage extends StatelessWidget {
   final ApplicationModel application;
@@ -30,6 +31,7 @@ class ApplicationStatusPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Application Status'),
       ),
+      drawer: MainAppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

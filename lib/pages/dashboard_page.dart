@@ -8,6 +8,7 @@ import 'package:student_application_tracking_app/providers/student_data_provider
 import 'package:student_application_tracking_app/providers/university_provider.dart';
 import 'package:student_application_tracking_app/utils/enums.dart';
 import 'package:student_application_tracking_app/widgets/main_app_bar.dart';
+import 'package:student_application_tracking_app/widgets/main_app_drawer.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -81,6 +82,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       appBar: const MainAppBar(title: "Dashboard"),
+      drawer: MainAppDrawer(),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator()) // Show loading spinner
