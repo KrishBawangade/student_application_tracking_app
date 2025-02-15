@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_application_tracking_app/models/application_model.dart';
 import 'package:student_application_tracking_app/models/university_data_model.dart';
+import 'package:student_application_tracking_app/pages/application_status_page.dart';
 import 'package:student_application_tracking_app/providers/student_data_provider.dart';
 import 'package:student_application_tracking_app/providers/university_provider.dart';
 import 'package:student_application_tracking_app/utils/enums.dart';
@@ -38,29 +39,34 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void> _loadUniversityList() async {
-    final universityProvider = Provider.of<UniversityProvider>(context, listen: false);
+    final universityProvider =
+        Provider.of<UniversityProvider>(context, listen: false);
 
     debugPrint("Fetching university list...");
     await universityProvider.loadUniversities(
-      onSuccess: () => debugPrint("Universities Loaded: ${universityProvider.universities?.length}"),
-      onError: (e) => debugPrint("Error Loading Universities: $e")
-    );
+        onSuccess: () => debugPrint(
+            "Universities Loaded: ${universityProvider.universities?.length}"),
+        onError: (e) => debugPrint("Error Loading Universities: $e"));
   }
 
   Future<void> _fetchApplications() async {
-    final studentDataProvider = Provider.of<StudentDataProvider>(context, listen: false);
-    
-    String studentId = studentDataProvider.studentData?.id ?? FirebaseAuth.instance.currentUser?.uid ?? "";
+    final studentDataProvider =
+        Provider.of<StudentDataProvider>(context, listen: false);
+
+    String studentId = studentDataProvider.studentData?.id ??
+        FirebaseAuth.instance.currentUser?.uid ??
+        "";
     debugPrint("Fetching applications for student ID: $studentId");
 
     await studentDataProvider.loadStudentApplications(
-      studentId: studentId,
-      onSuccess: () {
-        debugPrint("Applications Loaded: ${studentDataProvider.appliedApplicationList?.length}");
-        _filteredApplications = studentDataProvider.appliedApplicationList ?? [];
-      },
-      onError: (e) => debugPrint("Error Loading Applications: $e")
-    );
+        studentId: studentId,
+        onSuccess: () {
+          debugPrint(
+              "Applications Loaded: ${studentDataProvider.appliedApplicationList?.length}");
+          _filteredApplications =
+              studentDataProvider.appliedApplicationList ?? [];
+        },
+        onError: (e) => debugPrint("Error Loading Applications: $e"));
   }
 
   @override
@@ -68,13 +74,16 @@ class _DashboardPageState extends State<DashboardPage> {
     StudentDataProvider studentDataProvider = Provider.of(context);
     UniversityProvider universityProvider = Provider.of(context);
 
-    List<ApplicationModel> applicationList = studentDataProvider.appliedApplicationList ?? [];
-    List<UniversityDataModel> universityList = universityProvider.universities ?? [];
+    List<ApplicationModel> applicationList =
+        studentDataProvider.appliedApplicationList ?? [];
+    List<UniversityDataModel> universityList =
+        universityProvider.universities ?? [];
 
     return Scaffold(
       appBar: const MainAppBar(title: "Dashboard"),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator()) // Show loading spinner
+          ? const Center(
+              child: CircularProgressIndicator()) // Show loading spinner
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -96,7 +105,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   const SizedBox(height: 16),
                   Expanded(
-                    child: _buildApplicationList(_filteredApplications, universityList),
+                    child: _buildApplicationList(
+                        _filteredApplications, universityList),
                   ),
                 ],
               ),
@@ -141,29 +151,35 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  void _filterApplications(List<ApplicationModel> applications, List<UniversityDataModel> universityList) {
+  void _filterApplications(List<ApplicationModel> applications,
+      List<UniversityDataModel> universityList) {
     if (_searchQuery.isEmpty) {
       _filteredApplications = List.from(applications);
     } else {
       _filteredApplications = applications.where((app) {
         UniversityDataModel? university;
         try {
-          university = universityList.firstWhere((university) => university.id == app.universityId);
+          university = universityList
+              .firstWhere((university) => university.id == app.universityId);
         } catch (_) {}
 
-        return (university?.name ?? "").toLowerCase().contains(_searchQuery.toLowerCase());
+        return (university?.name ?? "")
+            .toLowerCase()
+            .contains(_searchQuery.toLowerCase());
       }).toList();
     }
     setState(() {}); // Refresh the UI with filtered data
   }
 
-  Widget _buildApplicationList(List<ApplicationModel> applications, List<UniversityDataModel> universityList) {
+  Widget _buildApplicationList(List<ApplicationModel> applications,
+      List<UniversityDataModel> universityList) {
     if (applications.isEmpty) {
       return Center(
-        child: Text("No applications found.", style: TextStyle(fontSize: 18, color: Theme.of(context).hintColor)),
+        child: Text("No applications found.",
+            style: TextStyle(fontSize: 18, color: Theme.of(context).hintColor)),
       );
     }
- 
+
     return ListView.builder(
       itemCount: applications.length,
       itemBuilder: (context, index) {
@@ -171,9 +187,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
         UniversityDataModel? university;
         try {
-          university = universityList.firstWhere((university) => university.id == application.universityId);
+          university = universityList.firstWhere(
+              (university) => university.id == application.universityId);
         } catch (_) {
-          debugPrint("No matching university found for application: ${application.id}");
+          debugPrint(
+              "No matching university found for application: ${application.id}");
         }
 
         return Card(
@@ -182,7 +200,12 @@ class _DashboardPageState extends State<DashboardPage> {
             subtitle: Text(application.programApplied),
             trailing: Text(application.applicationStatus.name),
             onTap: () {
-              // Navigate to details page (implement this if needed)
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ApplicationStatusPage(application: application),
+                ),
+              );
             },
           ),
         );

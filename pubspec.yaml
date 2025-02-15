@@ -7,6 +7,7 @@ environment:
   sdk: ^3.6.2
 
 dependencies:
+  cached_network_image: ^3.4.1
   cloud_firestore: ^5.6.3
   email_validator: ^3.0.0
   firebase_auth: ^5.4.2
