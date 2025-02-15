@@ -37,7 +37,22 @@ String convertDateFormat(String dateStr, String inputFormat, String outputFormat
       DrawerItemModel(
           title: "Log Out", icon: Icons.logout, onClick: (context) async{
             await authProvider.logoutUser(onSuccess: (){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => LoginPage()));
+              Navigator.of(context).pushReplacement(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0); // Slide from right (you can adjust this)
+        const end = Offset.zero;
+        var tween = Tween(begin: begin, end: end);
+        final offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300), // Adjust duration
+      reverseTransitionDuration: const Duration(milliseconds: 300), // Duration for pop
+    ),);
               AppFunctions.showDismissibleSnackBar(context, "Logged Out Successfully!");
             }, onError: (e){
               AppFunctions.showDismissibleSnackBar(context, e);

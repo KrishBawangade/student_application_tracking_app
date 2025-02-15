@@ -73,7 +73,23 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _isLoading = false;
             });
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => DashboardPage()));
+            Navigator.of(context).pushReplacement(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => DashboardPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0); // Slide from right (you can adjust this)
+        const end = Offset.zero;
+        final tween = Tween(begin: begin, end: end);
+        final offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300), // Adjust duration
+      reverseTransitionDuration: const Duration(milliseconds: 300), // Duration for pop
+    ),);
+    AppFunctions.showDismissibleSnackBar(context, "Logged in Successfully!"); // Use AppFunctions
           },
           onError: (error) {
             setState(() {

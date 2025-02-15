@@ -21,33 +21,32 @@ class ApplicationStatusPage extends StatelessWidget {
     UniversityDataModel? university;
     try {
       university = universityProvider.universities?.firstWhere(
-            (uni) => uni.id == application.universityId
-      );
+          (uni) => uni.id == application.universityId);
     } catch (e) {
-      debugPrint("Error finding university: $e"); // Print the error for debugging
+      debugPrint("Error finding university: $e");
     }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Application Status'),
+        centerTitle: true,
       ),
       drawer: MainAppDrawer(),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (university != null) ...[
-                Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (university != null) ...[
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
                   child: CachedNetworkImage(
-                    imageUrl: university.imageUrl ??
-                        'https://via.placeholder.com/200',
+                    imageUrl: university.imageUrl ??"",
                     height: 200,
                     width: 200,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                    Image.asset(
+                    placeholder: (context, url) => Image.asset(
                       AppConstants.placeHolderImagePath,
                       height: 200,
                       width: 200,
@@ -61,55 +60,66 @@ class ApplicationStatusPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Center(
-                  child: Text(
-                    university.name ?? 'N/A',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  university.name ?? 'N/A',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Center(
-                  child: Text(
-                    university.location ?? 'N/A',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-              const Text(
-                'Application Details',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
-              _buildDetailRow('Program Applied:', application.programApplied),
-              _buildDetailRow(
-                  'Applied On:',
-                  DateFormat('dd MMM yyyy').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          application.appliedOnMillis))),
-              _buildDetailRow('Status:', application.applicationStatus.name),
-              const SizedBox(height: 16),
               Center(
-                child: CircularPercentIndicator(
-                  radius: 80.0,
-                  lineWidth: 10.0,
-                  percent: _getProgressPercentage(application.applicationStatus),
-                  center: Text(
-                    '${(_getProgressPercentage(application.applicationStatus) * 100).toStringAsFixed(0)}%',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  progressColor: _getProgressColor(application.applicationStatus),
+                child: Text(
+                  university.location ?? 'N/A',
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
+              const SizedBox(height: 32),
             ],
-          ),
+            const Text(
+              'Application Details',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _buildDetailRow('Program Applied:', application.programApplied),
+            _buildDetailRow(
+              'Applied On:',
+              DateFormat('dd MMM yyyy').format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                      application.appliedOnMillis)),
+            ),
+            _buildDetailRow('Status:', application.applicationStatus.name),
+            const SizedBox(height: 24),
+            Center(
+              child: Column(
+                children: [
+                  CircularPercentIndicator(
+                    radius: 100.0,
+                    lineWidth: 12.0,
+                    percent: _getProgressPercentage(application.applicationStatus),
+                    center: Text(
+                      '${(_getProgressPercentage(application.applicationStatus) * 100).toStringAsFixed(0)}%',
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    progressColor: _getProgressColor(application.applicationStatus),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _getStatusMessage(application.applicationStatus),
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -160,6 +170,21 @@ class ApplicationStatusPage extends StatelessWidget {
         return Colors.red;
       default:
         return Colors.grey;
+    }
+  }
+
+  String _getStatusMessage(ApplicationStatus status) {
+    switch (status) {
+      case ApplicationStatus.applied:
+        return "Application Submitted";
+      case ApplicationStatus.underReview:
+        return "Application Under Review";
+      case ApplicationStatus.accepted:
+        return "Application Accepted!";
+      case ApplicationStatus.rejected:
+        return "Application Rejected";
+      default:
+        return "";
     }
   }
 }
